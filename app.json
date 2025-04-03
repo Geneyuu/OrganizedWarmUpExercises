@@ -1,41 +1,61 @@
 {
-  "expo": {
-    "name": "OrganizedWarmUpExercises",
-    "slug": "OrganizedWarmUpExercises",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
-    },
-    "plugins": [
-      "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
-        }
-      ]
-    ],
-    "experiments": {
-      "typedRoutes": true
-    }
-  }
+	"expo": {
+		"name": "FinalWarmUpExercise",
+		"slug": "FinalWarmUpExercise",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"scheme": "myapp",
+		"userInterfaceStyle": "automatic",
+		"newArchEnabled": true,
+		"ios": {
+			"supportsTablet": true,
+			"bundleIdentifier": "com.basketballWarmUpExercise.CaviteStateUniversity"
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/images/applogo_modified.png",
+				"backgroundColor": "#ffffff"
+			},
+			"package": "com.basketballWarmUpExercise.CaviteStateUniversity",
+			"jsEngine": "hermes"
+		},
+		"web": {
+			"bundler": "metro",
+			"output": "static",
+			"favicon": "./assets/images/favicon.png"
+		},
+		"plugins": [
+			"expo-router",
+			[
+				"expo-splash-screen",
+				{
+					"image": "./assets/images/WhiteBackground.png",
+					"imageWidth": 200,
+					"resizeMode": "contain",
+					"backgroundColor": "#ffffff"
+				}
+			]
+			// [
+			// 	"expo-video",
+			// 	{
+			// 		"supportsBackgroundPlayback": true,
+			// 		"supportsPictureInPicture": true
+			// 	}
+			// ]
+		],
+		"experiments": {
+			"typedRoutes": true
+		},
+		"extra": {
+			"router": {
+				"origin": false
+			},
+			"eas": {
+				"projectId": "ab080fc0-b79f-4a97-9cbb-fd9eb2500b5c"
+			}
+		},
+		"owner": "escario13"
+	}
 }
+// npx expo prebuild --platform android
+// eas build --platform android

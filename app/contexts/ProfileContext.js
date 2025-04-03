@@ -4,7 +4,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // Create Context
 export const ProfileContext = createContext();
 
-export const ProfileProvider = ({ children }) => {
+// Use default export for the ProfileProvider
+const ProfileProvider = ({ children }) => {
 	const [name, setName] = useState("Taguro");
 
 	// Load name from AsyncStorage when app starts
@@ -39,3 +40,5 @@ export const ProfileProvider = ({ children }) => {
 		</ProfileContext.Provider>
 	);
 };
+
+export default ProfileProvider; // Default export

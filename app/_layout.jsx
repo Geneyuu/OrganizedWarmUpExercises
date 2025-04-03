@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { ProfileProvider } from "../app/contexts/ProfileContext"; // Adjust path if needed
+import ProfileProvider from "../app/contexts/ProfileContext"; // Adjust path if needed
 
 export default function RootLayout() {
 	return (

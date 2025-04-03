@@ -1,0 +1,30 @@
+{
+	"cli": {
+		"version": ">= 14.2.0",
+		"appVersionSource": "remote"
+	},
+	"build": {
+		"development": {
+			"android": {
+				"buildType": "apk" // Force APK for development builds
+			},
+			"developmentClient": true,
+			"distribution": "internal"
+		},
+		"preview": {
+			"android": {
+				"buildType": "apk" // Force APK for preview builds
+			},
+			"distribution": "internal"
+		},
+		"production": {
+			"autoIncrement": true,
+			"android": {
+				"buildType": "apk" // Force APK for production builds
+			}
+		}
+	},
+	"submit": {
+		"production": {}
+	}
+}

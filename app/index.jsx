@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
 		marginBottom: hp("2%"),
 	},
 	title: {
-		fontSize: hp("3%"),
+		fontSize: hp("2.5%"),
 		marginTop: hp("2%"),
 		width: wp("50%"),
 		fontFamily: "Roboto-SemiBold",
