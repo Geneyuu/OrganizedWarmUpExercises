@@ -1,17 +1,26 @@
 import { Stack } from "expo-router";
-import ProfileProvider from "../app/contexts/ProfileContext"; // Adjust path if needed
+import ProfileProvider from "../app/contexts/ProfileContext";
+import ExerciseProvider from "../app/contexts/ExerciseContext";
 
 export default function RootLayout() {
 	return (
 		<ProfileProvider>
-			<Stack>
-				<Stack.Screen name="index" options={{ headerShown: false }} />
-				<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-				<Stack.Screen
-					name="OnBoarding"
-					options={{ headerShown: false }}
-				/>
-			</Stack>
+			<ExerciseProvider>
+				<Stack>
+					<Stack.Screen
+						name="index"
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="(tabs)"
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="OnBoarding"
+						options={{ headerShown: false }}
+					/>
+				</Stack>
+			</ExerciseProvider>
 		</ProfileProvider>
 	);
 }

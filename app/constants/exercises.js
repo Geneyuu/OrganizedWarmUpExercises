@@ -5,7 +5,7 @@ export const exercises = [
 		video: require("../../assets/videos/video.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
 		recommendedRepetition: "10-15 reps",
-		recommendedDuration: "20-30 seconds",
+		recommendedDuration: "15-30 seconds",
 		description:
 			"Stand tall, feet shoulder-width apart. Slightly bend your knees, then reach toward your toes. Hold for 20 counts and return to start.",
 		duration: 30,
