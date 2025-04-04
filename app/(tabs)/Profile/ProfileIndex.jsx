@@ -33,7 +33,7 @@ const ProfileIndex = () => {
 			updateName(nameToSave);
 			setModalMessage(`You set your name to: \n \n${nameToSave}!`);
 			setIsModalVisible(true);
-			setNewName("");
+			// setNewName("");
 		}
 	};
 

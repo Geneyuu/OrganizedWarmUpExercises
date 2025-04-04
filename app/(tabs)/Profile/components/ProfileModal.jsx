@@ -17,14 +17,14 @@ const ProfileModal = ({ isVisible, message, onClose }) => {
 			<StatusBar
 				barStyle="light-content"
 				style={{}}
-				backgroundColor="rgba(0, 0, 0, 0.6)"
+				backgroundColor="rgba(0, 0, 0, 0.3)"
 			/>
 
 			<View style={styles.modalOverlay}>
 				<View style={styles.modalContainer}>
 					<Ionicons
 						name="checkmark-circle-sharp"
-						size={40}
+						size={50}
 						color="#000"
 						style={styles.notificationIcon}
 					/>
@@ -49,16 +49,16 @@ const styles = {
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		backgroundColor: "rgba(0, 0, 0, 0.6)",
+		backgroundColor: "rgba(0, 0, 0, 0.3)",
 	},
 	modalContainer: {
 		backgroundColor: "white",
-		paddingVertical: hp(4),
+		paddingVertical: hp(3),
 		paddingHorizontal: wp(0),
 		borderRadius: wp(5),
 		width: wp(60),
 		alignItems: "center",
-		elevation: 5,
+		elevation: 40,
 	},
 	modalTitle: {
 		fontSize: hp(2.5),

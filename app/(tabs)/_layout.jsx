@@ -61,7 +61,7 @@ const Layout = () => {
 					),
 				}}
 			/>
-			{/* 
+
 			<Tabs.Screen
 				name="Search"
 				options={{
@@ -76,7 +76,7 @@ const Layout = () => {
 						/>
 					),
 				}}
-			/> */}
+			/>
 
 			<Tabs.Screen
 				name="Profile"
