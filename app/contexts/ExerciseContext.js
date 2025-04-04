@@ -1,13 +1,14 @@
 import React, { createContext, useReducer, useEffect } from "react";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import exercises from "../constants/exercises"; // Assuming you have a constants file with exercise data
+import exercises from "../constants/exercises";
 
 const ACTIONS = {
 	SET_OPEN: "setOpen",
 	SET_VALUE: "setValue",
 	SET_DURATION: "setDuration",
 	SET_REPETITIONS: "setRepetitions",
+	SET_REST_DURATION: "setRestDuration",
 	RESET_INPUTS: "resetInputs",
 	LOAD_EXERCISE_DATA: "loadExerciseData",
 };
@@ -23,19 +24,26 @@ function reducer(state, action) {
 			return { ...state, duration: action.payload };
 		case ACTIONS.SET_REPETITIONS:
 			return { ...state, repetitions: action.payload };
+		case ACTIONS.SET_REST_DURATION:
+			return { ...state, restDuration: action.payload };
 		case ACTIONS.RESET_INPUTS:
-			return { ...state, duration: "", repetitions: "" };
+			return {
+				...state,
+				duration: "",
+				repetitions: "",
+				restDuration: "",
+			};
 		case ACTIONS.LOAD_EXERCISE_DATA:
 			return {
 				...state,
 				duration: action.payload.duration,
 				repetitions: action.payload.repetitions,
+				restDuration: action.payload.restDuration || "",
 			};
 		default:
 			return state;
 	}
 }
-
 // Create context
 export const ExerciseContext = createContext();
 
@@ -46,6 +54,7 @@ export const ExerciseProvider = ({ children }) => {
 		value: null,
 		duration: "",
 		repetitions: "",
+		restDuration: "",
 	});
 
 	// Load exercise data from AsyncStorage when component mounts
@@ -54,10 +63,12 @@ export const ExerciseProvider = ({ children }) => {
 			try {
 				const storedExercises = await AsyncStorage.getItem("exercises");
 				if (!storedExercises) {
+					// Ensure restDuration is part of each exercise
 					const defaultExercises = exercises.map((exercise) => ({
 						id: exercise.id,
 						duration: exercise.duration,
 						repetitions: exercise.repetitions,
+						restDuration: exercise.restDuration || "",
 					}));
 					await AsyncStorage.setItem(
 						"exercises",
@@ -94,6 +105,9 @@ export const ExerciseProvider = ({ children }) => {
 										"",
 									repetitions:
 										selectedExercise.repetitions?.toString() ||
+										"",
+									restDuration:
+										selectedExercise.restDuration?.toString() ||
 										"",
 								},
 							});

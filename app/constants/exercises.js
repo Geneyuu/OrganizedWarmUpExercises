@@ -10,6 +10,7 @@ export const exercises = [
 			"Stand tall, feet shoulder-width apart. Slightly bend your knees, then reach toward your toes. Hold for 20 counts and return to start.",
 		duration: 30,
 		repetitions: 12,
+		restDuration: 15, // Rest time in seconds
 	},
 
 	{
@@ -22,6 +23,7 @@ export const exercises = [
 		description: "Relieves tension and improves shoulder flexibility.",
 		duration: 30,
 		repetitions: 12,
+		restDuration: 15, // Rest time in seconds
 	},
 
 	{
@@ -34,6 +36,7 @@ export const exercises = [
 		description: "Prepares shoulder joints for dynamic movement.",
 		duration: 30,
 		repetitions: 12,
+		restDuration: 20, // Rest time in seconds
 	},
 
 	{
@@ -46,6 +49,7 @@ export const exercises = [
 		description: "Improves upper body flexibility and posture.",
 		duration: 20,
 		repetitions: 2,
+		restDuration: 15, // Rest time in seconds
 	},
 
 	{
@@ -58,6 +62,7 @@ export const exercises = [
 		description: "Stretches the obliques and improves core flexibility.",
 		duration: 30,
 		repetitions: 10,
+		restDuration: 20, // Rest time in seconds
 	},
 
 	{
@@ -70,6 +75,7 @@ export const exercises = [
 		description: "Loosens up the hips for better mobility.",
 		duration: 30,
 		repetitions: 12,
+		restDuration: 15, // Rest time in seconds
 	},
 
 	{
@@ -82,6 +88,7 @@ export const exercises = [
 		description: "Improves hip mobility and balance.",
 		duration: 30,
 		repetitions: 12,
+		restDuration: 15, // Rest time in seconds
 	},
 
 	{
@@ -94,6 +101,7 @@ export const exercises = [
 		description: "Loosens hamstrings and activates glutes.",
 		duration: 40,
 		repetitions: 25,
+		restDuration: 20, // Rest time in seconds
 	},
 
 	{
@@ -106,6 +114,7 @@ export const exercises = [
 		description: "Warms up the hip flexors and quads.",
 		duration: 30,
 		repetitions: 12,
+		restDuration: 20, // Rest time in seconds
 	},
 
 	{
@@ -118,6 +127,7 @@ export const exercises = [
 		description: "Increases heart rate and warms up muscles.",
 		duration: 180,
 		repetitions: 1,
+		restDuration: 30, // Rest time in seconds
 	},
 
 	{
@@ -130,6 +140,7 @@ export const exercises = [
 		description: "Strengthens legs and glutes.",
 		duration: 40,
 		repetitions: 12,
+		restDuration: 20, // Rest time in seconds
 	},
 
 	{
@@ -142,6 +153,7 @@ export const exercises = [
 		description: "Engages the lower body and core.",
 		duration: 40,
 		repetitions: 12,
+		restDuration: 20, // Rest time in seconds
 	},
 
 	{
@@ -154,6 +166,7 @@ export const exercises = [
 		description: "Improves explosiveness and leg strength.",
 		duration: 30,
 		repetitions: 10,
+		restDuration: 20, // Rest time in seconds
 	},
 
 	{
@@ -166,6 +179,7 @@ export const exercises = [
 		description: "Enhances balance and leg endurance.",
 		duration: 40,
 		repetitions: 12,
+		restDuration: 20, // Rest time in seconds
 	},
 
 	{
@@ -179,6 +193,7 @@ export const exercises = [
 			"Stand tall, feet shoulder-width apart. Slightly bend your knees, then reach toward your toes. Hold for 20 counts and return to start.",
 		duration: 30,
 		repetitions: 12,
+		restDuration: 15, // Rest time in seconds
 	},
 
 	{
@@ -191,6 +206,7 @@ export const exercises = [
 		description: "Boosts heart rate and warms up the entire body.",
 		duration: 40,
 		repetitions: 25,
+		restDuration: 20, // Rest time in seconds
 	},
 
 	{
@@ -203,6 +219,7 @@ export const exercises = [
 		description: "Improves lateral movement for defense.",
 		duration: 30,
 		repetitions: 2,
+		restDuration: 20, // Rest time in seconds
 	},
 
 	{
@@ -215,6 +232,7 @@ export const exercises = [
 		description: "Enhances agility and coordination.",
 		duration: 30,
 		repetitions: 3,
+		restDuration: 20, // Rest time in seconds
 	},
 ];
 

@@ -15,7 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // SettingsIndex component
 export default function SettingsIndex() {
 	const { state, dispatch } = useContext(ExerciseContext);
-	const { open, value, duration, repetitions } = state;
+	const { open, value, duration, repetitions, restDuration } = state;
 
 	// Convert exercises array into dropdown items
 	const [items, setItems] = useState([
@@ -32,10 +32,10 @@ export default function SettingsIndex() {
 			Alert.alert("Error", "Please select an exercise.");
 			return;
 		}
-		if (!duration || !repetitions) {
+		if (!duration || !repetitions || !restDuration) {
 			Alert.alert(
 				"Error",
-				"Please fill out both duration and repetitions."
+				"Please fill out duration, repetitions, and rest duration."
 			);
 			return;
 		}
@@ -58,6 +58,10 @@ export default function SettingsIndex() {
 							type === "repetitions"
 								? parseInt(repetitions, 10)
 								: exercise.repetitions,
+						restDuration:
+							type === "restDuration"
+								? parseInt(restDuration, 10)
+								: exercise.restDuration, // Remove restTimer and keep restDuration
 					};
 				}
 				return exercise;
@@ -85,6 +89,7 @@ export default function SettingsIndex() {
 				id: exercise.id,
 				duration: exercise.duration,
 				repetitions: exercise.repetitions,
+				restDuration: exercise.restDuration, // Only use restDuration
 			}));
 
 			await AsyncStorage.setItem(
@@ -148,6 +153,25 @@ export default function SettingsIndex() {
 					onPress={() => saveExerciseData("repetitions")}
 				>
 					<Text style={styles.buttonText}>Save Repetitions</Text>
+				</TouchableOpacity>
+			</View>
+			{/* Inside the component */}
+			<View style={styles.inputContainer}>
+				<Text style={styles.label}>Set Rest Duration:</Text>
+				<TextInput
+					style={styles.input}
+					value={restDuration} // Use restDuration
+					onChangeText={
+						(text) =>
+							dispatch({ type: "setRestDuration", payload: text }) // Dispatch for restDuration
+					}
+					keyboardType="numeric"
+				/>
+				<TouchableOpacity
+					style={styles.button}
+					onPress={() => saveExerciseData("restDuration")}
+				>
+					<Text style={styles.buttonText}>Save Rest Duration</Text>
 				</TouchableOpacity>
 			</View>
 			<TouchableOpacity

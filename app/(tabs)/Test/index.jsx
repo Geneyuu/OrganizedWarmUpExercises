@@ -10,6 +10,7 @@ const Index = () => {
 			<Text>Selected Exercise Value: {state.value}</Text>
 			<Text>Duration: {state.duration}</Text>
 			<Text>Repetitions: {state.repetitions}</Text>
+			<Text>restDuration: {state.restDuration}</Text>
 		</View>
 	);
 };
