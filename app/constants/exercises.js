@@ -4,235 +4,361 @@ export const exercises = [
 		name: "Head Turns",
 		video: require("../../assets/videos/video.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
-		recommendedRepetition: "10-15 reps",
-		recommendedDuration: "15-30 seconds",
 		description:
 			"Stand tall, feet shoulder-width apart. Slightly bend your knees, then reach toward your toes. Hold for 20 counts and return to start.",
-		duration: 30,
-		repetitions: 12,
-		restDuration: 15, // Rest time in seconds
+		intensity: {
+			beginner: {
+				recommendedRepetition: "10 reps",
+				recommendedDuration: "15 seconds",
+				duration: { min: 15, max: 20 },
+				repetitions: { min: 10, max: 15 },
+				restDuration: { min: 15, max: 20 },
+			},
+			intermediate: {
+				recommendedRepetition: "12 reps",
+				recommendedDuration: "20 seconds",
+				duration: { min: 20, max: 25 },
+				repetitions: { min: 12, max: 15 },
+				restDuration: { min: 20, max: 25 },
+			},
+			advanced: {
+				recommendedRepetition: "15 reps",
+				recommendedDuration: "30 seconds",
+				duration: { min: 25, max: 30 },
+				repetitions: { min: 15, max: 20 },
+				restDuration: { min: 25, max: 30 },
+			},
+		},
 	},
-
 	{
 		id: "shoulder-rolls",
 		name: "Shoulder Rolls",
 		video: require("../../assets/videos/pushup.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
-		recommendedRepetition: "5-15 reps",
-		recommendedDuration: "20-30 seconds",
 		description: "Relieves tension and improves shoulder flexibility.",
-		duration: 30,
-		repetitions: 12,
-		restDuration: 15, // Rest time in seconds
+		intensity: {
+			beginner: {
+				recommendedRepetition: "5 reps",
+				recommendedDuration: "15 seconds",
+				duration: { min: 15, max: 20 },
+				repetitions: { min: 5, max: 10 },
+				restDuration: { min: 10, max: 15 },
+			},
+			intermediate: {
+				recommendedRepetition: "8 reps",
+				recommendedDuration: "20 seconds",
+				duration: { min: 20, max: 25 },
+				repetitions: { min: 8, max: 12 },
+				restDuration: { min: 15, max: 20 },
+			},
+			advanced: {
+				recommendedRepetition: "12 reps",
+				recommendedDuration: "25 seconds",
+				duration: { min: 25, max: 30 },
+				repetitions: { min: 12, max: 15 },
+				restDuration: { min: 20, max: 25 },
+			},
+		},
 	},
-
 	{
 		id: "arm-circles",
 		name: "Arm Circles",
 		video: require("../../assets/videos/pushup.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
-		recommendedRepetition: "10-15 reps",
-		recommendedDuration: "20-30 seconds",
 		description: "Prepares shoulder joints for dynamic movement.",
-		duration: 30,
-		repetitions: 12,
-		restDuration: 20, // Rest time in seconds
+		intensity: {
+			beginner: {
+				recommendedRepetition: "10 reps",
+				recommendedDuration: "20 seconds",
+				duration: { min: 20, max: 25 },
+				repetitions: { min: 10, max: 12 },
+				restDuration: { min: 15, max: 20 },
+			},
+			intermediate: {
+				recommendedRepetition: "12 reps",
+				recommendedDuration: "25 seconds",
+				duration: { min: 25, max: 30 },
+				repetitions: { min: 12, max: 15 },
+				restDuration: { min: 20, max: 25 },
+			},
+			advanced: {
+				recommendedRepetition: "15 reps",
+				recommendedDuration: "30 seconds",
+				duration: { min: 30, max: 35 },
+				repetitions: { min: 15, max: 20 },
+				restDuration: { min: 25, max: 30 },
+			},
+		},
 	},
-
 	{
 		id: "overhead-stretch",
 		name: "Overhead Stretch",
 		video: require("../../assets/videos/pushup.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
-		recommendedRepetition: "1-2 reps",
-		recommendedDuration: "10-20 seconds",
 		description: "Improves upper body flexibility and posture.",
-		duration: 20,
-		repetitions: 2,
-		restDuration: 15, // Rest time in seconds
+		intensity: {
+			beginner: {
+				recommendedRepetition: "1 rep",
+				recommendedDuration: "10 seconds",
+				duration: { min: 10, max: 15 },
+				repetitions: { min: 1, max: 2 },
+				restDuration: { min: 15, max: 20 },
+			},
+			intermediate: {
+				recommendedRepetition: "1-2 reps",
+				recommendedDuration: "15 seconds",
+				duration: { min: 15, max: 20 },
+				repetitions: { min: 2, max: 3 },
+				restDuration: { min: 20, max: 25 },
+			},
+			advanced: {
+				recommendedRepetition: "2 reps",
+				recommendedDuration: "20 seconds",
+				duration: { min: 20, max: 25 },
+				repetitions: { min: 3, max: 4 },
+				restDuration: { min: 25, max: 30 },
+			},
+		},
 	},
-
 	{
 		id: "side-stretches",
 		name: "Side Stretches",
 		video: require("../../assets/videos/pushup.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
-		recommendedRepetition: "5-10 reps",
-		recommendedDuration: "20-30 seconds",
 		description: "Stretches the obliques and improves core flexibility.",
-		duration: 30,
-		repetitions: 10,
-		restDuration: 20, // Rest time in seconds
+		intensity: {
+			beginner: {
+				recommendedRepetition: "5 reps",
+				recommendedDuration: "20 seconds",
+				duration: { min: 20, max: 25 },
+				repetitions: { min: 5, max: 7 },
+				restDuration: { min: 15, max: 20 },
+			},
+			intermediate: {
+				recommendedRepetition: "8 reps",
+				recommendedDuration: "25 seconds",
+				duration: { min: 25, max: 30 },
+				repetitions: { min: 8, max: 10 },
+				restDuration: { min: 20, max: 25 },
+			},
+			advanced: {
+				recommendedRepetition: "10 reps",
+				recommendedDuration: "30 seconds",
+				duration: { min: 30, max: 35 },
+				repetitions: { min: 10, max: 12 },
+				restDuration: { min: 25, max: 30 },
+			},
+		},
 	},
-
 	{
 		id: "hip-rotation",
 		name: "Hip Rotation",
 		video: require("../../assets/videos/video.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
-		recommendedRepetition: "10-15 reps",
-		recommendedDuration: "20-30 seconds",
 		description: "Loosens up the hips for better mobility.",
-		duration: 30,
-		repetitions: 12,
-		restDuration: 15, // Rest time in seconds
+		intensity: {
+			beginner: {
+				recommendedRepetition: "10 reps",
+				recommendedDuration: "20 seconds",
+				duration: { min: 20, max: 25 },
+				repetitions: { min: 10, max: 12 },
+				restDuration: { min: 15, max: 20 },
+			},
+			intermediate: {
+				recommendedRepetition: "12 reps",
+				recommendedDuration: "25 seconds",
+				duration: { min: 25, max: 30 },
+				repetitions: { min: 12, max: 15 },
+				restDuration: { min: 20, max: 25 },
+			},
+			advanced: {
+				recommendedRepetition: "15 reps",
+				recommendedDuration: "30 seconds",
+				duration: { min: 30, max: 35 },
+				repetitions: { min: 15, max: 20 },
+				restDuration: { min: 25, max: 30 },
+			},
+		},
 	},
-
 	{
 		id: "knee-hugs",
 		name: "Knee Hugs",
 		video: require("../../assets/videos/pushup.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
-		recommendedRepetition: "10-12 reps",
-		recommendedDuration: "20-30 seconds",
 		description: "Improves hip mobility and balance.",
-		duration: 30,
-		repetitions: 12,
-		restDuration: 15, // Rest time in seconds
+		intensity: {
+			beginner: {
+				recommendedRepetition: "10 reps",
+				recommendedDuration: "20 seconds",
+				duration: { min: 20, max: 25 },
+				repetitions: { min: 10, max: 12 },
+				restDuration: { min: 15, max: 20 },
+			},
+			intermediate: {
+				recommendedRepetition: "12 reps",
+				recommendedDuration: "25 seconds",
+				duration: { min: 25, max: 30 },
+				repetitions: { min: 12, max: 15 },
+				restDuration: { min: 20, max: 25 },
+			},
+			advanced: {
+				recommendedRepetition: "15 reps",
+				recommendedDuration: "30 seconds",
+				duration: { min: 30, max: 35 },
+				repetitions: { min: 15, max: 20 },
+				restDuration: { min: 25, max: 30 },
+			},
+		},
 	},
-
 	{
 		id: "butt-kicks",
 		name: "Butt Kicks",
 		video: require("../../assets/videos/pushup.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
-		recommendedRepetition: "20-30 reps",
-		recommendedDuration: "30-40 seconds",
 		description: "Loosens hamstrings and activates glutes.",
-		duration: 40,
-		repetitions: 25,
-		restDuration: 20, // Rest time in seconds
+		intensity: {
+			beginner: {
+				recommendedRepetition: "15 reps",
+				recommendedDuration: "25 seconds",
+				duration: { min: 25, max: 30 },
+				repetitions: { min: 15, max: 20 },
+				restDuration: { min: 20, max: 25 },
+			},
+			intermediate: {
+				recommendedRepetition: "20 reps",
+				recommendedDuration: "30 seconds",
+				duration: { min: 30, max: 35 },
+				repetitions: { min: 20, max: 25 },
+				restDuration: { min: 25, max: 30 },
+			},
+			advanced: {
+				recommendedRepetition: "30 reps",
+				recommendedDuration: "40 seconds",
+				duration: { min: 35, max: 45 },
+				repetitions: { min: 25, max: 30 },
+				restDuration: { min: 30, max: 35 },
+			},
+		},
 	},
-
 	{
 		id: "walking-high-knees",
 		name: "Walking High Knees",
 		video: require("../../assets/videos/pushup.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
-		recommendedRepetition: "10-15 reps",
-		recommendedDuration: "20-30 seconds",
 		description: "Warms up the hip flexors and quads.",
-		duration: 30,
-		repetitions: 12,
-		restDuration: 20, // Rest time in seconds
+		intensity: {
+			beginner: {
+				recommendedRepetition: "10 reps",
+				recommendedDuration: "20 seconds",
+				duration: { min: 20, max: 25 },
+				repetitions: { min: 10, max: 12 },
+				restDuration: { min: 15, max: 20 },
+			},
+			intermediate: {
+				recommendedRepetition: "12 reps",
+				recommendedDuration: "25 seconds",
+				duration: { min: 25, max: 30 },
+				repetitions: { min: 12, max: 15 },
+				restDuration: { min: 20, max: 25 },
+			},
+			advanced: {
+				recommendedRepetition: "15 reps",
+				recommendedDuration: "30 seconds",
+				duration: { min: 30, max: 35 },
+				repetitions: { min: 15, max: 20 },
+				restDuration: { min: 25, max: 30 },
+			},
+		},
 	},
-
 	{
 		id: "jogging",
 		name: "Jogging",
 		video: require("../../assets/videos/pushup.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
-		recommendedRepetition: "1 rep",
-		recommendedDuration: "2-3 minutes",
 		description: "Increases heart rate and warms up muscles.",
-		duration: 180,
-		repetitions: 1,
-		restDuration: 30, // Rest time in seconds
+		intensity: {
+			beginner: {
+				recommendedRepetition: "1 rep",
+				recommendedDuration: "1 minute",
+				duration: { min: 60, max: 90 },
+				repetitions: { min: 1, max: 2 },
+				restDuration: { min: 20, max: 30 },
+			},
+			intermediate: {
+				recommendedRepetition: "1 rep",
+				recommendedDuration: "2 minutes",
+				duration: { min: 90, max: 120 },
+				repetitions: { min: 1, max: 2 },
+				restDuration: { min: 30, max: 40 },
+			},
+			advanced: {
+				recommendedRepetition: "1 rep",
+				recommendedDuration: "3 minutes",
+				duration: { min: 120, max: 180 },
+				repetitions: { min: 1, max: 1 },
+				restDuration: { min: 40, max: 50 },
+			},
+		},
 	},
-
 	{
 		id: "lunges",
 		name: "Lunges",
 		video: require("../../assets/videos/pushup.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
-		recommendedRepetition: "10-12 reps",
-		recommendedDuration: "30-40 seconds",
 		description: "Strengthens legs and glutes.",
-		duration: 40,
-		repetitions: 12,
-		restDuration: 20, // Rest time in seconds
+		intensity: {
+			beginner: {
+				recommendedRepetition: "10 reps",
+				recommendedDuration: "30 seconds",
+				duration: { min: 30, max: 35 },
+				repetitions: { min: 10, max: 12 },
+				restDuration: { min: 15, max: 20 },
+			},
+			intermediate: {
+				recommendedRepetition: "12 reps",
+				recommendedDuration: "35 seconds",
+				duration: { min: 35, max: 40 },
+				repetitions: { min: 12, max: 15 },
+				restDuration: { min: 20, max: 25 },
+			},
+			advanced: {
+				recommendedRepetition: "15 reps",
+				recommendedDuration: "40 seconds",
+				duration: { min: 40, max: 45 },
+				repetitions: { min: 15, max: 18 },
+				restDuration: { min: 25, max: 30 },
+			},
+		},
 	},
-
 	{
-		id: "squat",
-		name: "Squat",
+		id: "squats",
+		name: "Squats",
 		video: require("../../assets/videos/pushup.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
-		recommendedRepetition: "10-12 reps",
-		recommendedDuration: "30-40 seconds",
-		description: "Engages the lower body and core.",
-		duration: 40,
-		repetitions: 12,
-		restDuration: 20, // Rest time in seconds
-	},
-
-	{
-		id: "jump-squat",
-		name: "Jump Squat",
-		video: require("../../assets/videos/pushup.mp4"),
-		image: require("../../assets/images/withballpreview.png"),
-		recommendedRepetition: "8-12 reps",
-		recommendedDuration: "20-30 seconds",
-		description: "Improves explosiveness and leg strength.",
-		duration: 30,
-		repetitions: 10,
-		restDuration: 20, // Rest time in seconds
-	},
-
-	{
-		id: "walking-lunges",
-		name: "Walking Lunges",
-		video: require("../../assets/videos/pushup.mp4"),
-		image: require("../../assets/images/withballpreview.png"),
-		recommendedRepetition: "10-12 reps",
-		recommendedDuration: "30-40 seconds",
-		description: "Enhances balance and leg endurance.",
-		duration: 40,
-		repetitions: 12,
-		restDuration: 20, // Rest time in seconds
-	},
-
-	{
-		id: "toe-touches",
-		name: "Toe Touches",
-		video: require("../../assets/videos/pushup.mp4"),
-		image: require("../../assets/images/withballpreview.png"),
-		recommendedRepetition: "10-15 reps",
-		recommendedDuration: "20-30 seconds",
-		description:
-			"Stand tall, feet shoulder-width apart. Slightly bend your knees, then reach toward your toes. Hold for 20 counts and return to start.",
-		duration: 30,
-		repetitions: 12,
-		restDuration: 15, // Rest time in seconds
-	},
-
-	{
-		id: "jumping-jacks",
-		name: "Jumping Jacks",
-		video: require("../../assets/videos/pushup.mp4"),
-		image: require("../../assets/images/withballpreview.png"),
-		recommendedRepetition: "20-30 reps",
-		recommendedDuration: "30-40 seconds",
-		description: "Boosts heart rate and warms up the entire body.",
-		duration: 40,
-		repetitions: 25,
-		restDuration: 20, // Rest time in seconds
-	},
-
-	{
-		id: "defensive-slides",
-		name: "Defensive Slides",
-		video: require("../../assets/videos/pushup.mp4"),
-		image: require("../../assets/images/withballpreview.png"),
-		recommendedRepetition: "2 sets",
-		recommendedDuration: "15-30 seconds",
-		description: "Improves lateral movement for defense.",
-		duration: 30,
-		repetitions: 2,
-		restDuration: 20, // Rest time in seconds
-	},
-
-	{
-		id: "carioca",
-		name: "Carioca",
-		video: require("../../assets/videos/pushup.mp4"),
-		image: require("../../assets/images/withballpreview.png"),
-		recommendedRepetition: "2-3 sets",
-		recommendedDuration: "20-30 seconds",
-		description: "Enhances agility and coordination.",
-		duration: 30,
-		repetitions: 3,
-		restDuration: 20, // Rest time in seconds
+		description: "Improves leg strength and mobility.",
+		intensity: {
+			beginner: {
+				recommendedRepetition: "10 reps",
+				recommendedDuration: "30 seconds",
+				duration: { min: 30, max: 35 },
+				repetitions: { min: 10, max: 12 },
+				restDuration: { min: 15, max: 20 },
+			},
+			intermediate: {
+				recommendedRepetition: "12 reps",
+				recommendedDuration: "35 seconds",
+				duration: { min: 35, max: 40 },
+				repetitions: { min: 12, max: 15 },
+				restDuration: { min: 20, max: 25 },
+			},
+			advanced: {
+				recommendedRepetition: "15 reps",
+				recommendedDuration: "40 seconds",
+				duration: { min: 40, max: 45 },
+				repetitions: { min: 15, max: 18 },
+				restDuration: { min: 25, max: 30 },
+			},
+		},
 	},
 ];
 

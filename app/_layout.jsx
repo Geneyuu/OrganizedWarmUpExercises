@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 import ProfileProvider from "../app/contexts/ProfileContext";
-import ExerciseProvider from "../app/contexts/ExerciseContext";
+import { ExerciseProvider }  from "../app/contexts/ExerciseContext";
 
 export default function RootLayout() {
 	return (
