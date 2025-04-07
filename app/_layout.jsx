@@ -1,6 +1,11 @@
 import { Stack } from "expo-router";
 import ProfileProvider from "../app/contexts/ProfileContext";
-import { ExerciseProvider }  from "../app/contexts/ExerciseContext";
+import { ExerciseProvider } from "../app/contexts/ExerciseContext";
+if (global.HermesInternal) {
+	console.log("Hermes is enabled!");
+} else {
+	console.log("Hermes is NOT enabled");
+}
 
 export default function RootLayout() {
 	return (

@@ -1,214 +1,270 @@
 import React, { createContext, useReducer, useEffect } from "react";
-import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import exercises from "../constants/exercises";
+import { exercises } from "../constants/exercises";
+import { Alert } from "react-native";
 
 export const ExerciseContext = createContext();
 
-export const ExerciseProvider = ({ children }) => {
-	const [state, dispatch] = useReducer(reducer, {
-		open: false,
-		value: null,
-		intensityOpen: false,
-		intensity: "beginner",
-		duration: "",
-		repetitions: "",
-		restDuration: "",
-	});
+const initialState = {
+	exerciseOpen: false,
+	exerciseValue: null,
+	intensityOpen: false,
+	intensityValue: "beginner",
+	duration: "",
+	repetitions: "",
+	restDuration: "",
+};
 
-	const {
-		open,
-		value,
-		intensityOpen,
-		intensity,
-		duration,
-		repetitions,
-		restDuration,
-	} = state;
-
-	function reducer(state, action) {
-		switch (action.type) {
-			case "setOpen":
-				return { ...state, open: action.payload };
-			case "setValue":
-				return { ...state, value: action.payload };
-			case "setIntensityOpen":
-				return { ...state, intensityOpen: action.payload };
-			case "setIntensity":
-				return { ...state, intensity: action.payload };
-			case "setDuration":
-				return { ...state, duration: action.payload };
-			case "setRepetitions":
-				return { ...state, repetitions: action.payload };
-			case "setRestDuration":
-				return { ...state, restDuration: action.payload };
-			case "resetInputs":
-				return {
-					...state,
-					duration: "",
-					repetitions: "",
-					restDuration: "",
-				};
-			case "loadExerciseData":
-				return {
-					...state,
-					duration: action.payload.duration,
-					repetitions: action.payload.repetitions,
-					restDuration: action.payload.restDuration || "",
-				};
-			default:
-				return state;
-		}
+const reducer = (state, action) => {
+	switch (action.type) {
+		case "SET_EXERCISE_OPEN":
+			return { ...state, exerciseOpen: action.payload };
+		case "SET_EXERCISE_VALUE":
+			return { ...state, exerciseValue: action.payload };
+		case "SET_INTENSITY_OPEN":
+			return { ...state, intensityOpen: action.payload };
+		case "SET_INTENSITY_VALUE":
+			return { ...state, intensityValue: action.payload };
+		case "SET_DURATION":
+			return { ...state, duration: action.payload };
+		case "SET_REPETITIONS":
+			return { ...state, repetitions: action.payload };
+		case "SET_REST_DURATION":
+			return { ...state, restDuration: action.payload };
+		case "RESET_INPUTS":
+			return {
+				...state,
+				exerciseValue: null,
+				duration: "",
+				repetitions: "",
+				restDuration: "",
+			};
+		case "SET_ALL_VALUES":
+			return {
+				...state,
+				duration: action.payload.duration,
+				repetitions: action.payload.repetitions,
+				restDuration: action.payload.restDuration,
+			};
+		default:
+			return state;
 	}
+};
 
-	const saveExerciseSetting = async (
-		exerciseId,
-		intensityLevel,
-		value,
-		field
-	) => {
-		try {
-			if (!value || value.trim() === "") {
-				Alert.alert("Error", `❌ ${field} cannot be empty!`);
-				return false;
-			}
+export const ExerciseProvider = ({ children }) => {
+	const [state, dispatch] = useReducer(reducer, initialState);
 
-			const parsedValue = parseInt(value);
-			if (isNaN(parsedValue) || parsedValue <= 0) {
-				Alert.alert("Error", `❌ ${field} must be a number > 0`);
-				return false;
-			}
-
-			const storedExercises = await AsyncStorage.getItem("exercises");
-			if (storedExercises) {
-				const exercisesList = JSON.parse(storedExercises);
-				const exerciseIndex = exercisesList.findIndex(
-					(ex) => ex.id === exerciseId
-				);
-
-				if (exerciseIndex !== -1) {
-					exercisesList[exerciseIndex].intensity[intensityLevel][
-						field
-					].min = parsedValue;
-					await AsyncStorage.setItem(
-						"exercises",
-						JSON.stringify(exercisesList)
-					);
-					Alert.alert("Success", `✅ ${field} saved!`);
-					return true;
-				}
-			}
-			return false;
-		} catch (error) {
-			Alert.alert("Error", `Failed to save ${field}`);
-			return false;
-		}
-	};
-
+	// Load saved intensity when component mounts
 	useEffect(() => {
-		const loadExercises = async () => {
+		const loadIntensity = async () => {
 			try {
-				const storedExercises = await AsyncStorage.getItem("exercises");
-				if (!storedExercises) {
+				const savedIntensity = await AsyncStorage.getItem(
+					"savedIntensity"
+				);
+				if (savedIntensity) {
+					dispatch({
+						type: "SET_INTENSITY_VALUE",
+						payload: savedIntensity,
+					});
+				}
+			} catch (error) {
+				console.log("Error loading intensity:", error);
+			}
+		};
+
+		loadIntensity();
+	}, []);
+
+	// Save intensity whenever it changes
+	useEffect(() => {
+		if (state.intensityValue) {
+			AsyncStorage.setItem("savedIntensity", state.intensityValue);
+		}
+	}, [state.intensityValue]);
+
+	// Load exercise data when needed
+	useEffect(() => {
+		const initializeData = async () => {
+			try {
+				const existing = await AsyncStorage.getItem("exerciseData");
+				if (!existing) {
 					const defaultExercises = exercises.map((exercise) => ({
 						id: exercise.id,
 						intensity: {
-							beginner: {
-								duration: exercise.intensity.beginner.duration,
-								repetitions:
-									exercise.intensity.beginner.repetitions,
-								restDuration:
-									exercise.intensity.beginner.restDuration,
-							},
-							intermediate: {
-								duration:
-									exercise.intensity.intermediate.duration,
-								repetitions:
-									exercise.intensity.intermediate.repetitions,
-								restDuration:
-									exercise.intensity.intermediate
-										.restDuration,
-							},
-							advanced: {
-								duration: exercise.intensity.advanced.duration,
-								repetitions:
-									exercise.intensity.advanced.repetitions,
-								restDuration:
-									exercise.intensity.advanced.restDuration,
-							},
+							beginner: exercise.intensity.beginner,
+							intermediate: exercise.intensity.intermediate,
+							advanced: exercise.intensity.advanced,
 						},
 					}));
 					await AsyncStorage.setItem(
-						"exercises",
+						"exerciseData",
 						JSON.stringify(defaultExercises)
 					);
 				}
 			} catch (error) {
-				Alert.alert("Error", "Failed to load exercises.");
+				console.error("Failed to initialize exercise data:", error);
 			}
 		};
 
-		loadExercises();
+		initializeData();
 	}, []);
 
-	useEffect(() => {
-		const updateExerciseData = async () => {
-			if (value !== null && intensity) {
-				try {
-					const storedExercises = await AsyncStorage.getItem(
-						"exercises"
-					);
-					if (storedExercises) {
-						const exercisesList = JSON.parse(storedExercises);
-						const selectedExercise = exercisesList.find(
-							(ex) => ex.id === value
-						);
+	const loadSavedData = async (exerciseId, intensity) => {
+		try {
+			const savedData = await AsyncStorage.getItem("exerciseData");
+			if (savedData) {
+				const exercisesData = JSON.parse(savedData);
+				const exerciseData = exercisesData.find(
+					(ex) => ex.id === exerciseId
+				);
 
-						if (selectedExercise) {
-							const intensityData =
-								selectedExercise.intensity[intensity];
-							if (intensityData) {
-								dispatch({
-									type: "loadExerciseData",
-									payload: {
-										duration: `${intensityData.duration.min}`,
-										repetitions: `${intensityData.repetitions.min}`,
-										restDuration: `${intensityData.restDuration.min}`,
-									},
-								});
-							} else {
-								Alert.alert(
-									"Error",
-									"Intensity data not found."
-								);
-							}
-						}
-					}
-				} catch (error) {
-					Alert.alert("Error", "Failed to load exercise data.");
+				if (exerciseData && exerciseData.intensity[intensity]) {
+					const intensityData = exerciseData.intensity[intensity];
+					dispatch({
+						type: "SET_ALL_VALUES",
+						payload: {
+							duration: intensityData.duration.min.toString(),
+							repetitions:
+								intensityData.repetitions.min.toString(),
+							restDuration:
+								intensityData.restDuration.min.toString(),
+						},
+					});
 				}
-			} else {
-				dispatch({ type: "resetInputs" });
 			}
-		};
+		} catch (error) {
+			console.error("Failed to load exercise data:", error);
+		}
+	};
 
-		updateExerciseData();
-	}, [value, intensity]);
+	const saveSettings = async (type, value) => {
+		try {
+			const { exerciseValue, intensityValue } = state;
+
+			// Basic validation
+			if (!exerciseValue || !intensityValue) {
+				Alert.alert("Error", "Please select a WarmUp Exercise First");
+				return false;
+			}
+
+			if (!value || value.trim() === "") {
+				Alert.alert("Error", `${type} cannot be empty!`);
+				return false;
+			}
+
+			const numericValue = parseInt(value);
+			if (isNaN(numericValue)) {
+				Alert.alert("Error", `${type} must be a valid number!`);
+				return false;
+			}
+
+			// Get current exercise data for range validation
+			const savedData = await AsyncStorage.getItem("exerciseData");
+			if (!savedData) return false;
+
+			const exercisesData = JSON.parse(savedData);
+			const exerciseData = exercisesData.find(
+				(ex) => ex.id === exerciseValue
+			);
+			if (!exerciseData) return false;
+
+			const intensitySettings = exerciseData.intensity[intensityValue];
+			const { min, max } = intensitySettings[type];
+
+			// Range validation
+			if (numericValue < min || numericValue > max) {
+				Alert.alert(
+					"Invalid Value",
+					`${type} must be between ${min} and ${max}`
+				);
+				return false;
+			}
+
+			// Proceed with saving if validation passes
+			const updatedIntensity = {
+				...exerciseData.intensity[intensityValue],
+				[type]: {
+					...exerciseData.intensity[intensityValue][type],
+					min: numericValue,
+				},
+			};
+
+			exerciseData.intensity = {
+				...exerciseData.intensity,
+				[intensityValue]: updatedIntensity,
+			};
+
+			await AsyncStorage.setItem(
+				"exerciseData",
+				JSON.stringify(exercisesData)
+			);
+
+			Alert.alert(
+				"Success",
+				`${
+					type.charAt(0).toUpperCase() + type.slice(1)
+				} saved successfully!`
+			);
+			return true;
+		} catch (error) {
+			console.error("Failed to save settings:", error);
+			Alert.alert("Error", "Failed to save settings");
+			return false;
+		}
+	};
+
+	const resetToDefault = async () => {
+		try {
+			// Reset UI state
+			dispatch({ type: "SET_EXERCISE_VALUE", payload: null });
+			dispatch({ type: "SET_DURATION", payload: "" });
+			dispatch({ type: "SET_REPETITIONS", payload: "" });
+			dispatch({ type: "SET_REST_DURATION", payload: "" });
+			dispatch({ type: "SET_EXERCISE_OPEN", payload: false });
+			dispatch({ type: "SET_INTENSITY_OPEN", payload: false });
+
+			// Reset storage to original exercises
+			const defaultExercises = exercises.map((exercise) => ({
+				id: exercise.id,
+				intensity: {
+					beginner: exercise.intensity.beginner,
+					intermediate: exercise.intensity.intermediate,
+					advanced: exercise.intensity.advanced,
+				},
+			}));
+
+			await AsyncStorage.setItem(
+				"exerciseData",
+				JSON.stringify(defaultExercises)
+			);
+
+			// Update context with default data
+			dispatch({
+				type: "SET_ALL_VALUES",
+				payload: {
+					duration: "",
+					repetitions: "",
+					restDuration: "",
+				},
+			});
+
+			Alert.alert("Success", "All values reset to default!");
+			return true;
+		} catch (error) {
+			console.error("Reset failed:", error);
+			Alert.alert("Error", "Failed to reset values");
+			return false;
+		}
+	};
 
 	return (
 		<ExerciseContext.Provider
 			value={{
-				state: {
-					open,
-					value,
-					intensityOpen,
-					intensity,
-					duration,
-					repetitions,
-					restDuration,
-				},
+				state,
 				dispatch,
-				saveExerciseSetting,
+				loadSavedData,
+				saveSettings,
+				resetToDefault,
 			}}
 		>
 			{children}
