@@ -27,7 +27,7 @@ const FirstTimeModal = () => {
 		const checkFirstTime = async () => {
 			try {
 				const firstTime = await AsyncStorage.getItem("firstTime");
-				if (firstTime === "false") {
+				if (firstTime === null) {
 					setShowModal(true);
 					await AsyncStorage.setItem("firstTime", "false");
 				}

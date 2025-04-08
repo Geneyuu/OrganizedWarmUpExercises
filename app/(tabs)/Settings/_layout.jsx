@@ -1,16 +1,25 @@
-import { View, Text } from "react-native";
+import { View, Text, SafeAreaView, StyleSheet } from "react-native";
 import React from "react";
 import { Stack } from "expo-router";
 
 const LayoutSettings = () => {
 	return (
-		<Stack>
-			<Stack.Screen
-				name="SettingsIndex"
-				options={{ headerShown: false }}
-			/>
-		</Stack>
+		<SafeAreaView style={styles.safeArea}>
+			<Stack>
+				<Stack.Screen
+					name="SettingsIndex"
+					options={{ headerShown: false }}
+				/>
+			</Stack>
+		</SafeAreaView>
 	);
 };
+
+const styles = StyleSheet.create({
+	safeArea: {
+		flex: 1,
+		backgroundColor: "white",
+	},
+});
 
 export default LayoutSettings;

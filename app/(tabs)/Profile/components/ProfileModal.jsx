@@ -13,7 +13,7 @@ const ProfileModal = ({ isVisible, message, onClose }) => {
 			animationType="fade"
 			onRequestClose={onClose}
 		>
-			{/* Adjusting the StatusBar style */}
+			{/*  */}
 			<StatusBar
 				barStyle="light-content"
 				style={{}}

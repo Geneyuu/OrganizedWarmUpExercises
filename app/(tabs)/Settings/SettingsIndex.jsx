@@ -6,12 +6,10 @@ import {
 	TextInput,
 	TouchableOpacity,
 	ScrollView,
-	Alert,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import exercises from "../../constants/exercises";
 import { ExerciseContext } from "../../contexts/ExerciseContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SettingsIndex = () => {
 	const { state, dispatch, loadSavedData, saveSettings, resetToDefault } =
@@ -33,12 +31,17 @@ const SettingsIndex = () => {
 			value: exercise.id,
 		})),
 	]);
-
 	const [intensityItems, setIntensityItems] = useState([
 		{ label: "Beginner", value: "beginner" },
 		{ label: "Intermediate", value: "intermediate" },
 		{ label: "Advanced", value: "advanced" },
 	]);
+
+	const [inputErrors, setInputErrors] = useState({
+		duration: false,
+		repetitions: false,
+		restDuration: false,
+	});
 
 	const selectedExercise = exercises.find(
 		(exercise) => exercise.id === exerciseValue
@@ -46,36 +49,9 @@ const SettingsIndex = () => {
 
 	const intensityData = selectedExercise?.intensity?.[intensityValue];
 
-	useEffect(() => {
-		if (intensityData) {
-			dispatch({
-				type: "SET_DURATION",
-				payload: intensityData.duration.min.toString(),
-			});
-			dispatch({
-				type: "SET_REPETITIONS",
-				payload: intensityData.repetitions.min.toString(),
-			});
-			dispatch({
-				type: "SET_REST_DURATION",
-				payload: intensityData.restDuration.min.toString(),
-			});
-		} else {
-			dispatch({
-				type: "RESET_INPUTS",
-			});
-		}
-	}, [selectedExercise, intensityValue]);
-
-	useEffect(() => {
-		if (exerciseValue && intensityValue) {
-			loadSavedData(exerciseValue, intensityValue);
-		}
-	}, [exerciseValue, intensityValue]);
-
-	// Validation functions
-	const isValueInRange = (value, type) => {
-		if (!intensityData || !value) return true;
+	// Validation function
+	const validateInput = (type, value) => {
+		if (!intensityData || !value) return false;
 
 		const numValue = parseInt(value, 10);
 		if (isNaN(numValue)) return false;
@@ -83,28 +59,44 @@ const SettingsIndex = () => {
 		switch (type) {
 			case "duration":
 				return (
-					numValue >= intensityData.duration.min &&
-					numValue <= intensityData.duration.max
+					numValue < intensityData.duration.min ||
+					numValue > intensityData.duration.max
 				);
 			case "repetitions":
 				return (
-					numValue >= intensityData.repetitions.min &&
-					numValue <= intensityData.repetitions.max
+					numValue < intensityData.repetitions.min ||
+					numValue > intensityData.repetitions.max
 				);
 			case "restDuration":
 				return (
-					numValue >= intensityData.restDuration.min &&
-					numValue <= intensityData.restDuration.max
+					numValue < intensityData.restDuration.min ||
+					numValue > intensityData.restDuration.max
 				);
 			default:
-				return true;
+				return false;
 		}
 	};
 
-	const getInputStyle = (value, type) => {
-		const isValid = isValueInRange(value, type);
-		return [styles.input, !isValid && styles.inputError];
-	};
+	// Validate inputs whenever they change
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			if (intensityData) {
+				setInputErrors({
+					duration: validateInput("duration", duration),
+					repetitions: validateInput("repetitions", repetitions),
+					restDuration: validateInput("restDuration", restDuration),
+				});
+			}
+		}, 100);
+
+		return () => clearTimeout(timer);
+	}, [duration, repetitions, restDuration, intensityData]);
+
+	useEffect(() => {
+		if (exerciseValue && intensityValue) {
+			loadSavedData(exerciseValue, intensityValue);
+		}
+	}, [exerciseValue, intensityValue]);
 
 	const getRecommendedRange = (type) => {
 		if (!intensityData) return "N/A";
@@ -119,18 +111,6 @@ const SettingsIndex = () => {
 			default:
 				return "N/A";
 		}
-	};
-
-	const handleSave = (type, value) => {
-		if (!isValueInRange(value, type)) {
-			Alert.alert(
-				"Invalid Value",
-				`Please enter a value between ${getRecommendedRange(type)}`,
-				[{ text: "OK" }]
-			);
-			return;
-		}
-		saveSettings(type, value);
 	};
 
 	return (
@@ -195,7 +175,10 @@ const SettingsIndex = () => {
 						<View style={styles.inputGroup}>
 							<Text style={styles.inputLabelText}>Duration:</Text>
 							<TextInput
-								style={getInputStyle(duration, "duration")}
+								style={[
+									styles.input,
+									inputErrors.duration && styles.inputError,
+								]}
 								value={duration}
 								placeholder="Enter Duration"
 								keyboardType="numeric"
@@ -209,15 +192,22 @@ const SettingsIndex = () => {
 							/>
 							<View style={styles.rangeContainer}>
 								<Text style={styles.rangeText}>
-									Recommended:
+									Recommended :
 								</Text>
 								<Text style={styles.rangeValue}>
 									{getRecommendedRange("duration")}
 								</Text>
 							</View>
 							<TouchableOpacity
-								style={styles.button}
-								onPress={() => handleSave("duration", duration)}
+								style={[
+									styles.button,
+									inputErrors.duration &&
+										styles.buttonDisabled,
+								]}
+								onPress={() =>
+									saveSettings("duration", duration)
+								}
+								disabled={inputErrors.duration}
 							>
 								<Text style={styles.buttonText}>
 									Save Duration
@@ -230,10 +220,11 @@ const SettingsIndex = () => {
 								Repetitions:
 							</Text>
 							<TextInput
-								style={getInputStyle(
-									repetitions,
-									"repetitions"
-								)}
+								style={[
+									styles.input,
+									inputErrors.repetitions &&
+										styles.inputError,
+								]}
 								value={repetitions}
 								placeholder="Enter Repetitions"
 								keyboardType="numeric"
@@ -254,10 +245,15 @@ const SettingsIndex = () => {
 								</Text>
 							</View>
 							<TouchableOpacity
-								style={styles.button}
+								style={[
+									styles.button,
+									inputErrors.repetitions &&
+										styles.buttonDisabled,
+								]}
 								onPress={() =>
-									handleSave("repetitions", repetitions)
+									saveSettings("repetitions", repetitions)
 								}
+								disabled={inputErrors.repetitions}
 							>
 								<Text style={styles.buttonText}>
 									Save Repetitions
@@ -268,7 +264,10 @@ const SettingsIndex = () => {
 
 					<Text style={styles.inputLabelText}>Rest Timer:</Text>
 					<TextInput
-						style={getInputStyle(restDuration, "restDuration")}
+						style={[
+							styles.input,
+							inputErrors.restDuration && styles.inputError,
+						]}
 						value={restDuration}
 						placeholder="Enter Rest Duration (seconds)"
 						keyboardType="numeric"
@@ -287,8 +286,14 @@ const SettingsIndex = () => {
 						</Text>
 					</View>
 					<TouchableOpacity
-						style={styles.button}
-						onPress={() => handleSave("restDuration", restDuration)}
+						style={[
+							styles.button,
+							inputErrors.restDuration && styles.buttonDisabled,
+						]}
+						onPress={() =>
+							saveSettings("restDuration", restDuration)
+						}
+						disabled={inputErrors.restDuration}
 					>
 						<Text style={styles.buttonText}>Save Rest Timer</Text>
 					</TouchableOpacity>
@@ -326,14 +331,14 @@ const styles = StyleSheet.create({
 		marginBottom: 15,
 	},
 	dropdown: {
-		borderWidth: 1,
-		borderColor: "#ccc",
+		borderWidth: 3,
+		borderColor: "#999",
 		borderRadius: 5,
 		backgroundColor: "white",
 	},
 	dropdownText: {
 		fontFamily: "Karla-SemiBold",
-		fontSize: 17,
+		fontSize: 18,
 		letterSpacing: -1,
 	},
 	dropdownList: {
@@ -355,9 +360,8 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 	},
 	inputError: {
+		backgroundColor: "#ffdddd",
 		borderColor: "red",
-		borderWidth: 2,
-		backgroundColor: "#FFEBEE",
 	},
 	rowContainer: {
 		flexDirection: "row",
@@ -379,8 +383,11 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		marginTop: 10,
 	},
+	buttonDisabled: {
+		backgroundColor: "#cccccc",
+	},
 	buttonResetDefault: {
-		backgroundColor: "red",
+		backgroundColor: "#14b316",
 		paddingVertical: 15,
 		width: "50%",
 		alignSelf: "center",
