@@ -10,7 +10,7 @@ import { ProfileContext } from "./../../../contexts/ProfileContext"; // Adjust p
 
 const Header = () => {
 	const router = useRouter();
-	const { name, updateName } = useContext(ProfileContext);
+	const { name } = useContext(ProfileContext);
 	return (
 		<>
 			<View style={styles.logoContainer}>

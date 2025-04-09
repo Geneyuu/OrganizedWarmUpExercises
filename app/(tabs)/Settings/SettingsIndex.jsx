@@ -31,6 +31,7 @@ const SettingsIndex = () => {
 			value: exercise.id,
 		})),
 	]);
+
 	const [intensityItems, setIntensityItems] = useState([
 		{ label: "Beginner", value: "beginner" },
 		{ label: "Intermediate", value: "intermediate" },

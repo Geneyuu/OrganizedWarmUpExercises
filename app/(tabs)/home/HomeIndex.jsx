@@ -1,7 +1,8 @@
+import { View, Text, StyleSheet, SafeAreaView } from "react-native";
 import React from "react";
-import { View, StyleSheet, SafeAreaView } from "react-native";
 import Header from "./components/Header";
 import FirstTimeModal from "./components/FirstTimeModal";
+import FeaturedExercises from "./components/FeaturedExercises";
 
 const HomeIndex = () => {
 	return (
@@ -9,6 +10,7 @@ const HomeIndex = () => {
 			<View style={styles.HomeContainer}>
 				<Header />
 				<FirstTimeModal />
+				<FeaturedExercises />
 			</View>
 		</SafeAreaView>
 	);

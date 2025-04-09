@@ -43,7 +43,8 @@ const ProfileIndex = () => {
 	};
 
 	return (
-		<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+		<TouchableWithoutFeedback>
+			{/* onPress={() => Keyboard.dismiss()} */}
 			<View style={styles.container}>
 				<Text style={styles.label}>Profile</Text>
 
