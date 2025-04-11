@@ -41,4 +41,4 @@ const ProfileProvider = ({ children }) => {
 	);
 };
 
-export default ProfileProvider; // Default export
+export default ProfileProvider;

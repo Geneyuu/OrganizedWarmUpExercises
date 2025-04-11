@@ -34,14 +34,8 @@
 					"resizeMode": "contain",
 					"backgroundColor": "#ffffff"
 				}
-			]
-			// [
-			// 	"expo-video",
-			// 	{
-			// 		"supportsBackgroundPlayback": true,
-			// 		"supportsPictureInPicture": true
-			// 	}
-			// ]
+			],
+			"expo-av"
 		],
 		"experiments": {
 			"typedRoutes": true
@@ -57,5 +51,3 @@
 		"owner": "escario13"
 	}
 }
-// npx expo prebuild --platform android
-// eas build --platform android

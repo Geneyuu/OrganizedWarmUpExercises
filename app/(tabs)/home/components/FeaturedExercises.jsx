@@ -13,69 +13,69 @@ const FeaturedExercises = () => {
 	const videoRef = useRef(null);
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [randomVideos, setRandomVideos] = useState([]);
+	const [isActive, setIsActive] = useState(true);
 
 	// Get 3 random videos on component mount
 	useEffect(() => {
-		// Filter exercises that have videos
 		const videos = exercises.filter((ex) => ex.video);
-		// Shuffle and take 3
 		const shuffled = [...videos].sort(() => 0.5 - Math.random());
 		setRandomVideos(shuffled.slice(0, 3));
 	}, []);
 
 	const handleSnapToItem = (index) => {
-		// Pause previous video
 		if (videoRef.current && randomVideos[currentIndex]) {
 			videoRef.current.pauseAsync();
 		}
 
 		setCurrentIndex(index);
 
-		// Play new video
-		if (randomVideos[index] && videoRef.current) {
+		if (randomVideos[index] && videoRef.current && isActive) {
 			videoRef.current.playAsync();
 		}
 	};
 
-	// Handle app focus and state changes
 	useFocusEffect(
 		useCallback(() => {
+			let appStateSubscription;
+
 			const handleAppStateChange = (nextAppState) => {
 				if (nextAppState === "active") {
-					// Resume video when app comes back to foreground
+					setIsActive(true);
 					if (randomVideos[currentIndex] && videoRef.current) {
 						videoRef.current.playAsync().catch(console.error);
 					}
 				} else {
-					// Pause video when app goes to background
+					setIsActive(false);
 					if (randomVideos[currentIndex] && videoRef.current) {
 						videoRef.current.pauseAsync().catch(console.error);
 					}
 				}
 			};
 
-			const subscription = AppState.addEventListener(
+			appStateSubscription = AppState.addEventListener(
 				"change",
 				handleAppStateChange
 			);
 
-			// Play video when screen comes into focus
+			setIsActive(true);
 			if (randomVideos[currentIndex] && videoRef.current) {
 				videoRef.current.playAsync().catch(console.error);
 			}
 
 			return () => {
-				subscription.remove();
-				// Pause video when screen loses focus
+				setIsActive(false);
 				if (randomVideos[currentIndex] && videoRef.current) {
 					videoRef.current.pauseAsync().catch(console.error);
+				}
+				if (appStateSubscription) {
+					appStateSubscription.remove();
 				}
 			};
 		}, [currentIndex, randomVideos])
 	);
 
 	if (randomVideos.length === 0) {
-		return null; // Return null or a placeholder if no videos available
+		return null;
 	}
 
 	return (
@@ -94,20 +94,22 @@ const FeaturedExercises = () => {
 							source={item.video}
 							style={styles.media}
 							resizeMode="cover"
-							shouldPlay={index === currentIndex}
+							shouldPlay={index === currentIndex && isActive}
 							isLooping
+							renderToHardwareTextureAndroid={true}
 						/>
 					</View>
 				)}
-				autoPlay={true}
+				autoPlay={isActive}
 				autoPlayInterval={3000}
 				pagingEnabled={true}
 				style={styles.carousel}
 				mode="parallax"
 				modeConfig={{
-					parallaxScrollingScale: 0.88,
-					parallaxScrollingOffset: wp(15),
+					parallaxScrollingScale: 0.8,
+					parallaxScrollingOffset: wp(25),
 				}}
+				renderToHardwareTextureAndroid={true}
 			/>
 		</View>
 	);

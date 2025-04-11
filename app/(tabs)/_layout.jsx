@@ -27,6 +27,7 @@ const Layout = () => {
 				tabBarShowLabel: true,
 				tabBarActiveTintColor: "#161616",
 				tabBarInactiveTintColor: "#161616",
+
 				tabBarStyle: {
 					backgroundColor: "#fff",
 					borderTopColor: "#232522",

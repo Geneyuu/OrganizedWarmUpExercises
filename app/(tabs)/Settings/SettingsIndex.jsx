@@ -50,12 +50,13 @@ const SettingsIndex = () => {
 
 	const intensityData = selectedExercise?.intensity?.[intensityValue];
 
-	// Validation function
+	// Enhanced validation function
 	const validateInput = (type, value) => {
-		if (!intensityData || !value) return false;
+		if (!exerciseValue || !intensityData) return true;
+		if (!value || value.trim() === "") return true;
 
 		const numValue = parseInt(value, 10);
-		if (isNaN(numValue)) return false;
+		if (isNaN(numValue)) return true;
 
 		switch (type) {
 			case "duration":
@@ -74,33 +75,43 @@ const SettingsIndex = () => {
 					numValue > intensityData.restDuration.max
 				);
 			default:
-				return false;
+				return true;
 		}
 	};
 
 	// Validate inputs whenever they change
 	useEffect(() => {
 		const timer = setTimeout(() => {
-			if (intensityData) {
+			if (exerciseValue && intensityData) {
 				setInputErrors({
 					duration: validateInput("duration", duration),
 					repetitions: validateInput("repetitions", repetitions),
 					restDuration: validateInput("restDuration", restDuration),
 				});
+			} else {
+				setInputErrors({
+					duration: false,
+					repetitions: false,
+					restDuration: false,
+				});
 			}
-		}, 100);
-
+		}, 50);
 		return () => clearTimeout(timer);
-	}, [duration, repetitions, restDuration, intensityData]);
+	}, [duration, repetitions, restDuration, intensityData, exerciseValue]);
 
 	useEffect(() => {
-		if (exerciseValue && intensityValue) {
+		if (exerciseValue === null) {
+			// Reset all fields when "Select an Exercise..." is chosen
+			dispatch({ type: "SET_DURATION", payload: "" });
+			dispatch({ type: "SET_REPETITIONS", payload: "" });
+			dispatch({ type: "SET_REST_DURATION", payload: "" });
+		} else if (exerciseValue && intensityValue) {
 			loadSavedData(exerciseValue, intensityValue);
 		}
 	}, [exerciseValue, intensityValue]);
 
 	const getRecommendedRange = (type) => {
-		if (!intensityData) return "N/A";
+		if (!exerciseValue || !intensityData) return "N/A";
 
 		switch (type) {
 			case "duration":
@@ -179,21 +190,30 @@ const SettingsIndex = () => {
 								style={[
 									styles.input,
 									inputErrors.duration && styles.inputError,
+									!exerciseValue && styles.disabledInput,
 								]}
-								value={duration}
-								placeholder="Enter Duration"
+								value={exerciseValue ? duration : ""}
+								placeholder={
+									exerciseValue
+										? "Enter Duration"
+										: "Select an exercise first"
+								}
+								placeholderTextColor={
+									!exerciseValue ? "#a0a0a0" : "#666"
+								}
 								keyboardType="numeric"
-								editable={true}
-								onChangeText={(text) =>
+								editable={exerciseValue !== null}
+								onChangeText={(text) => {
+									const cleanedText = text.trim();
 									dispatch({
 										type: "SET_DURATION",
-										payload: text,
-									})
-								}
+										payload: cleanedText,
+									});
+								}}
 							/>
 							<View style={styles.rangeContainer}>
 								<Text style={styles.rangeText}>
-									Recommended :
+									Recommended:
 								</Text>
 								<Text style={styles.rangeValue}>
 									{getRecommendedRange("duration")}
@@ -202,13 +222,19 @@ const SettingsIndex = () => {
 							<TouchableOpacity
 								style={[
 									styles.button,
-									inputErrors.duration &&
+									(!exerciseValue ||
+										!duration ||
+										inputErrors.duration) &&
 										styles.buttonDisabled,
 								]}
 								onPress={() =>
 									saveSettings("duration", duration)
 								}
-								disabled={inputErrors.duration}
+								disabled={
+									!exerciseValue ||
+									!duration ||
+									inputErrors.duration
+								}
 							>
 								<Text style={styles.buttonText}>
 									Save Duration
@@ -225,17 +251,26 @@ const SettingsIndex = () => {
 									styles.input,
 									inputErrors.repetitions &&
 										styles.inputError,
+									!exerciseValue && styles.disabledInput,
 								]}
-								value={repetitions}
-								placeholder="Enter Repetitions"
+								value={exerciseValue ? repetitions : ""}
+								placeholder={
+									exerciseValue
+										? "Enter Repetitions"
+										: "Select an exercise first"
+								}
+								placeholderTextColor={
+									!exerciseValue ? "#a0a0a0" : "#666"
+								}
 								keyboardType="numeric"
-								editable={true}
-								onChangeText={(text) =>
+								editable={exerciseValue !== null}
+								onChangeText={(text) => {
+									const cleanedText = text.trim();
 									dispatch({
 										type: "SET_REPETITIONS",
-										payload: text,
-									})
-								}
+										payload: cleanedText,
+									});
+								}}
 							/>
 							<View style={styles.rangeContainer}>
 								<Text style={styles.rangeText}>
@@ -248,13 +283,19 @@ const SettingsIndex = () => {
 							<TouchableOpacity
 								style={[
 									styles.button,
-									inputErrors.repetitions &&
+									(!exerciseValue ||
+										!repetitions ||
+										inputErrors.repetitions) &&
 										styles.buttonDisabled,
 								]}
 								onPress={() =>
 									saveSettings("repetitions", repetitions)
 								}
-								disabled={inputErrors.repetitions}
+								disabled={
+									!exerciseValue ||
+									!repetitions ||
+									inputErrors.repetitions
+								}
 							>
 								<Text style={styles.buttonText}>
 									Save Repetitions
@@ -268,17 +309,26 @@ const SettingsIndex = () => {
 						style={[
 							styles.input,
 							inputErrors.restDuration && styles.inputError,
+							!exerciseValue && styles.disabledInput,
 						]}
-						value={restDuration}
-						placeholder="Enter Rest Duration (seconds)"
+						value={exerciseValue ? restDuration : ""}
+						placeholder={
+							exerciseValue
+								? "Enter Rest Duration (seconds)"
+								: "Select an exercise first"
+						}
+						placeholderTextColor={
+							!exerciseValue ? "#a0a0a0" : "#666"
+						}
 						keyboardType="numeric"
-						editable={true}
-						onChangeText={(text) =>
+						editable={exerciseValue !== null}
+						onChangeText={(text) => {
+							const cleanedText = text.trim();
 							dispatch({
 								type: "SET_REST_DURATION",
-								payload: text,
-							})
-						}
+								payload: cleanedText,
+							});
+						}}
 					/>
 					<View style={styles.rangeContainer}>
 						<Text style={styles.rangeText}>Recommended:</Text>
@@ -289,18 +339,29 @@ const SettingsIndex = () => {
 					<TouchableOpacity
 						style={[
 							styles.button,
-							inputErrors.restDuration && styles.buttonDisabled,
+							(!exerciseValue ||
+								!restDuration ||
+								inputErrors.restDuration) &&
+								styles.buttonDisabled,
 						]}
 						onPress={() =>
 							saveSettings("restDuration", restDuration)
 						}
-						disabled={inputErrors.restDuration}
+						disabled={
+							!exerciseValue ||
+							!restDuration ||
+							inputErrors.restDuration
+						}
 					>
 						<Text style={styles.buttonText}>Save Rest Timer</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
-						style={styles.buttonResetDefault}
+						style={[
+							styles.buttonResetDefault,
+							!exerciseValue && styles.buttonDisabled,
+						]}
 						onPress={resetToDefault}
+						disabled={!exerciseValue}
 					>
 						<Text style={styles.buttonText}>
 							Reset All Exercises
@@ -358,7 +419,12 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 		paddingHorizontal: 10,
 		fontFamily: "Karla-Regular",
-		fontSize: 18,
+		fontSize: 16,
+	},
+	disabledInput: {
+		backgroundColor: "#f5f5f5",
+		borderColor: "#e0e0e0",
+		color: "#a0a0a0",
 	},
 	inputError: {
 		backgroundColor: "#ffdddd",

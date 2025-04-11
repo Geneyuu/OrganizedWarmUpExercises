@@ -3,16 +3,16 @@ import React from "react";
 import Header from "./components/Header";
 import FirstTimeModal from "./components/FirstTimeModal";
 import FeaturedExercises from "./components/FeaturedExercises";
+import Categories from "./components/Categories";
 
 const HomeIndex = () => {
 	return (
-		<SafeAreaView style={styles.safeArea}>
-			<View style={styles.HomeContainer}>
-				<Header />
-				<FirstTimeModal />
-				<FeaturedExercises />
-			</View>
-		</SafeAreaView>
+		<View style={styles.HomeContainer}>
+			<Header />
+			<FirstTimeModal />
+			<FeaturedExercises />
+			<Categories />
+		</View>
 	);
 };
 

@@ -4,9 +4,11 @@ import { Stack } from "expo-router";
 
 const LayoutHome = () => {
 	return (
-		<Stack>
-			<Stack.Screen name="HomeIndex" options={{ headerShown: false }} />
-		</Stack>
+		<Stack
+			screenOptions={{
+				headerShown: false,
+			}}
+		></Stack>
 	);
 };
 
