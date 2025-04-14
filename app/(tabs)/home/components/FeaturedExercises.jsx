@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { View, Text, StyleSheet, AppState } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { Video } from "expo-av";
@@ -10,121 +10,130 @@ import {
 import { exercises } from "../../../constants/exercises";
 
 const FeaturedExercises = () => {
+	// Refs and state
 	const videoRef = useRef(null);
-	const [currentIndex, setCurrentIndex] = useState(0);
-	const [randomVideos, setRandomVideos] = useState([]);
-	const [isActive, setIsActive] = useState(true);
+	const [currentSlide, setCurrentSlide] = useState(0);
+	const [videosToShow, setVideosToShow] = useState([]);
+	const [isScreenFocused, setIsScreenFocused] = useState(false);
+	const [appIsActive, setAppIsActive] = useState(true);
 
-	// Get 3 random videos on component mount
+	// 1. Pick 3 random videos when component loads
 	useEffect(() => {
-		const videos = exercises.filter((ex) => ex.video);
-		const shuffled = [...videos].sort(() => 0.5 - Math.random());
-		setRandomVideos(shuffled.slice(0, 3));
+		const videosWithClips = exercises.filter((exercise) => exercise.video);
+		const shuffled = [...videosWithClips].sort(() => Math.random() - 0.5);
+		setVideosToShow(shuffled.slice(0, 3));
 	}, []);
 
-	const handleSnapToItem = (index) => {
-		if (videoRef.current && randomVideos[currentIndex]) {
+	// 2. Handle when user swipes to a new slide
+	const handleSlideChange = (newIndex) => {
+		// Pause current video
+		if (videoRef.current) {
 			videoRef.current.pauseAsync();
 		}
 
-		setCurrentIndex(index);
+		// Update current slide
+		setCurrentSlide(newIndex);
 
-		if (randomVideos[index] && videoRef.current && isActive) {
+		// Play new video if screen is focused and app is active
+		if (isScreenFocused && appIsActive && videoRef.current) {
 			videoRef.current.playAsync();
 		}
 	};
 
-	useFocusEffect(
-		useCallback(() => {
-			let appStateSubscription;
+	// 3. Handle app background/foreground changes
+	useEffect(() => {
+		const subscription = AppState.addEventListener("change", (state) => {
+			const nowActive = state === "active";
+			setAppIsActive(nowActive);
 
-			const handleAppStateChange = (nextAppState) => {
-				if (nextAppState === "active") {
-					setIsActive(true);
-					if (randomVideos[currentIndex] && videoRef.current) {
-						videoRef.current.playAsync().catch(console.error);
-					}
+			if (videosToShow[currentSlide] && videoRef.current) {
+				if (nowActive && isScreenFocused) {
+					videoRef.current.playAsync().catch(console.log);
 				} else {
-					setIsActive(false);
-					if (randomVideos[currentIndex] && videoRef.current) {
-						videoRef.current.pauseAsync().catch(console.error);
-					}
+					videoRef.current.pauseAsync().catch(console.log);
 				}
-			};
+			}
+		});
 
-			appStateSubscription = AppState.addEventListener(
-				"change",
-				handleAppStateChange
-			);
+		return () => subscription.remove();
+	}, [currentSlide, videosToShow, isScreenFocused]);
 
-			setIsActive(true);
-			if (randomVideos[currentIndex] && videoRef.current) {
-				videoRef.current.playAsync().catch(console.error);
+	// 4. Handle screen focus/blur
+	useFocusEffect(
+		React.useCallback(() => {
+			setIsScreenFocused(true);
+
+			// Play video when screen focuses
+			if (videosToShow[currentSlide] && videoRef.current && appIsActive) {
+				videoRef.current.playAsync().catch(console.log);
 			}
 
 			return () => {
-				setIsActive(false);
-				if (randomVideos[currentIndex] && videoRef.current) {
-					videoRef.current.pauseAsync().catch(console.error);
-				}
-				if (appStateSubscription) {
-					appStateSubscription.remove();
+				setIsScreenFocused(false);
+				// Pause video when screen blurs
+				if (videosToShow[currentSlide] && videoRef.current) {
+					videoRef.current.pauseAsync().catch(console.log);
 				}
 			};
-		}, [currentIndex, randomVideos])
+		}, [currentSlide, videosToShow, appIsActive])
 	);
 
-	if (randomVideos.length === 0) {
+	if (videosToShow.length === 0) {
 		return null;
 	}
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.title}>Featured Exercises</Text>
+			<Text style={styles.heading}>Featured Exercises</Text>
+
 			<Carousel
 				loop
 				width={wp(100)}
 				height={hp(26)}
-				data={randomVideos}
-				onSnapToItem={handleSnapToItem}
+				data={videosToShow}
+				onSnapToItem={handleSlideChange}
 				renderItem={({ item, index }) => (
 					<View style={styles.slide}>
 						<Video
-							ref={index === currentIndex ? videoRef : null}
+							ref={index === currentSlide ? videoRef : null}
 							source={item.video}
-							style={styles.media}
+							style={styles.video}
 							resizeMode="cover"
-							shouldPlay={index === currentIndex && isActive}
+							shouldPlay={
+								index === currentSlide &&
+								isScreenFocused &&
+								appIsActive
+							}
 							isLooping
 							renderToHardwareTextureAndroid={true}
 						/>
 					</View>
 				)}
-				autoPlay={isActive}
+				autoPlay={isScreenFocused && appIsActive}
 				autoPlayInterval={3000}
-				pagingEnabled={true}
-				style={styles.carousel}
+				pagingEnabled
 				mode="parallax"
 				modeConfig={{
 					parallaxScrollingScale: 0.8,
 					parallaxScrollingOffset: wp(25),
 				}}
-				renderToHardwareTextureAndroid={true}
 			/>
 		</View>
 	);
 };
 
+// Styles remain the same
 const styles = StyleSheet.create({
 	container: {
 		marginVertical: hp(2),
 		alignItems: "center",
 	},
-	title: {
+	heading: {
 		fontSize: hp(2),
 		fontWeight: "bold",
 		alignSelf: "flex-start",
 		marginLeft: wp(5),
+		marginBottom: hp(1),
 	},
 	slide: {
 		flex: 1,
@@ -133,12 +142,9 @@ const styles = StyleSheet.create({
 		borderRadius: wp(2),
 		overflow: "hidden",
 	},
-	media: {
+	video: {
 		width: "100%",
 		height: "100%",
-	},
-	carousel: {
-		width: wp(100),
 	},
 });
 

@@ -10,6 +10,12 @@ import {
 import DropDownPicker from "react-native-dropdown-picker";
 import exercises from "../../constants/exercises";
 import { ExerciseContext } from "../../contexts/ExerciseContext";
+import {
+	getExerciseItems,
+	intensityItems,
+	validateInput,
+	getRecommendedRange,
+} from "../../utils/exerciseUtils";
 
 const SettingsIndex = () => {
 	const { state, dispatch, loadSavedData, saveSettings, resetToDefault } =
@@ -24,19 +30,9 @@ const SettingsIndex = () => {
 		restDuration,
 	} = state;
 
-	const [exerciseItems, setExerciseItems] = useState([
-		{ label: "Select an Exercise...", value: null },
-		...exercises.map((exercise) => ({
-			label: exercise.name,
-			value: exercise.id,
-		})),
-	]);
-
-	const [intensityItems, setIntensityItems] = useState([
-		{ label: "Beginner", value: "beginner" },
-		{ label: "Intermediate", value: "intermediate" },
-		{ label: "Advanced", value: "advanced" },
-	]);
+	const [exerciseItems, setExerciseItems] = useState(
+		getExerciseItems(exercises)
+	);
 
 	const [inputErrors, setInputErrors] = useState({
 		duration: false,
@@ -44,49 +40,32 @@ const SettingsIndex = () => {
 		restDuration: false,
 	});
 
-	const selectedExercise = exercises.find(
-		(exercise) => exercise.id === exerciseValue
-	);
-
-	const intensityData = selectedExercise?.intensity?.[intensityValue];
-
-	// Enhanced validation function
-	const validateInput = (type, value) => {
-		if (!exerciseValue || !intensityData) return true;
-		if (!value || value.trim() === "") return true;
-
-		const numValue = parseInt(value, 10);
-		if (isNaN(numValue)) return true;
-
-		switch (type) {
-			case "duration":
-				return (
-					numValue < intensityData.duration.min ||
-					numValue > intensityData.duration.max
-				);
-			case "repetitions":
-				return (
-					numValue < intensityData.repetitions.min ||
-					numValue > intensityData.repetitions.max
-				);
-			case "restDuration":
-				return (
-					numValue < intensityData.restDuration.min ||
-					numValue > intensityData.restDuration.max
-				);
-			default:
-				return true;
-		}
-	};
-
-	// Validate inputs whenever they change
+	// Validate inputs on change
 	useEffect(() => {
 		const timer = setTimeout(() => {
-			if (exerciseValue && intensityData) {
+			if (exerciseValue && intensityValue) {
 				setInputErrors({
-					duration: validateInput("duration", duration),
-					repetitions: validateInput("repetitions", repetitions),
-					restDuration: validateInput("restDuration", restDuration),
+					duration: validateInput(
+						exerciseValue,
+						intensityValue,
+						exercises,
+						"duration",
+						duration
+					),
+					repetitions: validateInput(
+						exerciseValue,
+						intensityValue,
+						exercises,
+						"repetitions",
+						repetitions
+					),
+					restDuration: validateInput(
+						exerciseValue,
+						intensityValue,
+						exercises,
+						"restDuration",
+						restDuration
+					),
 				});
 			} else {
 				setInputErrors({
@@ -97,11 +76,11 @@ const SettingsIndex = () => {
 			}
 		}, 50);
 		return () => clearTimeout(timer);
-	}, [duration, repetitions, restDuration, intensityData, exerciseValue]);
+	}, [duration, repetitions, restDuration, exerciseValue, intensityValue]);
 
+	// Load data when exercise or intensity changes
 	useEffect(() => {
 		if (exerciseValue === null) {
-			// Reset all fields when "Select an Exercise..." is chosen
 			dispatch({ type: "SET_DURATION", payload: "" });
 			dispatch({ type: "SET_REPETITIONS", payload: "" });
 			dispatch({ type: "SET_REST_DURATION", payload: "" });
@@ -110,25 +89,50 @@ const SettingsIndex = () => {
 		}
 	}, [exerciseValue, intensityValue]);
 
-	const getRecommendedRange = (type) => {
-		if (!exerciseValue || !intensityData) return "N/A";
-
-		switch (type) {
-			case "duration":
-				return `${intensityData.duration.min}-${intensityData.duration.max} seconds`;
-			case "repetitions":
-				return `${intensityData.repetitions.min}-${intensityData.repetitions.max} reps`;
-			case "restTimer":
-				return `${intensityData.restDuration.min}-${intensityData.restDuration.max} seconds`;
-			default:
-				return "N/A";
+	// Handle input change
+	const handleInputChange = (type, value) => {
+		// Only allow numbers or empty string
+		if (value === "" || /^\d*$/.test(value)) {
+			switch (type) {
+				case "duration":
+					dispatch({ type: "SET_DURATION", payload: value });
+					break;
+				case "repetitions":
+					dispatch({ type: "SET_REPETITIONS", payload: value });
+					break;
+				case "restDuration":
+					dispatch({ type: "SET_REST_DURATION", payload: value });
+					break;
+				default:
+					console.warn("Unknown input type:", type);
+			}
 		}
+	};
+
+	// Handle save button press
+	// const handleSave = (type) => {
+	// 	saveSettings(type, state[type.toLowerCase()]);
+	// };
+
+	const handleSave = (type) => {
+		let value;
+
+		if (type === "duration") {
+			value = state.duration;
+		} else if (type === "repetitions") {
+			value = state.repetitions;
+		} else if (type === "restDuration") {
+			value = state.restDuration;
+		}
+
+		saveSettings(type, value);
 	};
 
 	return (
 		<View style={styles.container}>
 			<Text style={styles.settings}>Settings</Text>
 
+			{/* Exercise Dropdown */}
 			<View style={styles.dropdownContainer}>
 				<Text style={styles.label}>Select an Exercise:</Text>
 				<DropDownPicker
@@ -138,14 +142,12 @@ const SettingsIndex = () => {
 					setOpen={(open) =>
 						dispatch({ type: "SET_EXERCISE_OPEN", payload: open })
 					}
-					setValue={(callback) => {
-						const newValue = callback();
+					setValue={(callback) =>
 						dispatch({
 							type: "SET_EXERCISE_VALUE",
-							payload: newValue,
-						});
-					}}
-					setItems={setExerciseItems}
+							payload: callback(),
+						})
+					}
 					style={styles.dropdown}
 					textStyle={styles.dropdownText}
 					dropDownContainerStyle={styles.dropdownList}
@@ -154,6 +156,7 @@ const SettingsIndex = () => {
 				/>
 			</View>
 
+			{/* Intensity Dropdown */}
 			<View style={styles.dropdownContainer}>
 				<Text style={[styles.label, { marginTop: 15 }]}>
 					Warm-up Intensity:
@@ -165,14 +168,12 @@ const SettingsIndex = () => {
 					setOpen={(open) =>
 						dispatch({ type: "SET_INTENSITY_OPEN", payload: open })
 					}
-					setValue={(callback) => {
-						const newValue = callback();
+					setValue={(callback) =>
 						dispatch({
 							type: "SET_INTENSITY_VALUE",
-							payload: newValue,
-						});
-					}}
-					setItems={setIntensityItems}
+							payload: callback(),
+						})
+					}
 					style={styles.dropdown}
 					textStyle={styles.dropdownText}
 					dropDownContainerStyle={styles.dropdownList}
@@ -184,6 +185,7 @@ const SettingsIndex = () => {
 			<ScrollView>
 				<View style={styles.inputContainer}>
 					<View style={styles.rowContainer}>
+						{/* Duration Input */}
 						<View style={styles.inputGroup}>
 							<Text style={styles.inputLabelText}>Duration:</Text>
 							<TextInput
@@ -202,21 +204,22 @@ const SettingsIndex = () => {
 									!exerciseValue ? "#a0a0a0" : "#666"
 								}
 								keyboardType="numeric"
-								editable={exerciseValue !== null}
-								onChangeText={(text) => {
-									const cleanedText = text.trim();
-									dispatch({
-										type: "SET_DURATION",
-										payload: cleanedText,
-									});
-								}}
+								editable={!!exerciseValue}
+								onChangeText={(text) =>
+									handleInputChange("duration", text)
+								}
 							/>
 							<View style={styles.rangeContainer}>
 								<Text style={styles.rangeText}>
-									Recommended:
-								</Text>
-								<Text style={styles.rangeValue}>
-									{getRecommendedRange("duration")}
+									Recommended:{" "}
+									<Text style={styles.rangeValue}>
+										{getRecommendedRange(
+											exerciseValue,
+											intensityValue,
+											exercises,
+											"duration"
+										)}
+									</Text>
 								</Text>
 							</View>
 							<TouchableOpacity
@@ -227,9 +230,7 @@ const SettingsIndex = () => {
 										inputErrors.duration) &&
 										styles.buttonDisabled,
 								]}
-								onPress={() =>
-									saveSettings("duration", duration)
-								}
+								onPress={() => handleSave("duration")}
 								disabled={
 									!exerciseValue ||
 									!duration ||
@@ -242,6 +243,7 @@ const SettingsIndex = () => {
 							</TouchableOpacity>
 						</View>
 
+						{/* Repetitions Input */}
 						<View style={styles.inputGroup}>
 							<Text style={styles.inputLabelText}>
 								Repetitions:
@@ -263,21 +265,22 @@ const SettingsIndex = () => {
 									!exerciseValue ? "#a0a0a0" : "#666"
 								}
 								keyboardType="numeric"
-								editable={exerciseValue !== null}
-								onChangeText={(text) => {
-									const cleanedText = text.trim();
-									dispatch({
-										type: "SET_REPETITIONS",
-										payload: cleanedText,
-									});
-								}}
+								editable={!!exerciseValue}
+								onChangeText={(text) =>
+									handleInputChange("repetitions", text)
+								}
 							/>
 							<View style={styles.rangeContainer}>
 								<Text style={styles.rangeText}>
-									Recommended:
-								</Text>
-								<Text style={styles.rangeValue}>
-									{getRecommendedRange("repetitions")}
+									Recommended:{" "}
+									<Text style={styles.rangeValue}>
+										{getRecommendedRange(
+											exerciseValue,
+											intensityValue,
+											exercises,
+											"repetitions"
+										)}
+									</Text>
 								</Text>
 							</View>
 							<TouchableOpacity
@@ -288,9 +291,7 @@ const SettingsIndex = () => {
 										inputErrors.repetitions) &&
 										styles.buttonDisabled,
 								]}
-								onPress={() =>
-									saveSettings("repetitions", repetitions)
-								}
+								onPress={() => handleSave("repetitions")}
 								disabled={
 									!exerciseValue ||
 									!repetitions ||
@@ -304,6 +305,7 @@ const SettingsIndex = () => {
 						</View>
 					</View>
 
+					{/* Rest Duration Input */}
 					<Text style={styles.inputLabelText}>Rest Timer:</Text>
 					<TextInput
 						style={[
@@ -314,26 +316,29 @@ const SettingsIndex = () => {
 						value={exerciseValue ? restDuration : ""}
 						placeholder={
 							exerciseValue
-								? "Enter Rest Duration (seconds)"
+								? "Enter Rest Duration"
 								: "Select an exercise first"
 						}
 						placeholderTextColor={
 							!exerciseValue ? "#a0a0a0" : "#666"
 						}
 						keyboardType="numeric"
-						editable={exerciseValue !== null}
-						onChangeText={(text) => {
-							const cleanedText = text.trim();
-							dispatch({
-								type: "SET_REST_DURATION",
-								payload: cleanedText,
-							});
-						}}
+						editable={!!exerciseValue}
+						onChangeText={(text) =>
+							handleInputChange("restDuration", text)
+						}
 					/>
 					<View style={styles.rangeContainer}>
-						<Text style={styles.rangeText}>Recommended:</Text>
-						<Text style={styles.rangeValue}>
-							{getRecommendedRange("restTimer")}
+						<Text style={styles.rangeText}>
+							Recommended:{" "}
+							<Text style={styles.rangeValue}>
+								{getRecommendedRange(
+									exerciseValue,
+									intensityValue,
+									exercises,
+									"restDuration"
+								)}
+							</Text>
 						</Text>
 					</View>
 					<TouchableOpacity
@@ -344,9 +349,7 @@ const SettingsIndex = () => {
 								inputErrors.restDuration) &&
 								styles.buttonDisabled,
 						]}
-						onPress={() =>
-							saveSettings("restDuration", restDuration)
-						}
+						onPress={() => handleSave("restDuration")}
 						disabled={
 							!exerciseValue ||
 							!restDuration ||
@@ -355,6 +358,8 @@ const SettingsIndex = () => {
 					>
 						<Text style={styles.buttonText}>Save Rest Timer</Text>
 					</TouchableOpacity>
+
+					{/* Reset Button */}
 					<TouchableOpacity
 						style={[
 							styles.buttonResetDefault,
@@ -476,13 +481,12 @@ const styles = StyleSheet.create({
 	rangeText: {
 		fontSize: 12,
 		fontFamily: "Roboto-Regular",
-		color: "#666",
-		marginRight: 5,
+		color: "black", // Changed to black
 	},
 	rangeValue: {
 		fontSize: 12,
 		fontFamily: "Karla-Regular",
-		color: "red",
+		color: "red", // Kept as red
 	},
 });
 

@@ -90,7 +90,7 @@ const ExerciseDetails = () => {
 							useNativeControls={false}
 							shouldPlay={isVideoReady}
 							isLooping
-							resizeMode="contain"
+							resizeMode="cover"
 							onLoad={handleVideoLoad}
 							onError={(error) =>
 								console.log("Error loading video:", error)
@@ -152,17 +152,17 @@ const styles = StyleSheet.create({
 	},
 	videoContainer: {
 		width: wp("100%"),
-		height: hp("30%"),
+		height: hp("50%"),
 		overflow: "hidden",
-		alignSelf: "center",
 		justifyContent: "center",
 		alignItems: "center",
 	},
 	video: {
-		width: "100%",
-		height: "100%",
-		resizeMode: "stretch",
+		alignSelf: "center",
+		width: wp("100%"),
+		height: hp("55%"),
 	},
+
 	loadingContainer: {
 		justifyContent: "center",
 		alignItems: "center",

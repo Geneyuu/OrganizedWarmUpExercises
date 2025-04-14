@@ -51,7 +51,7 @@ const StickyButton = () => {
 	const handlePress = () => {
 		if (!isClickable) return;
 		setIsClickable(false);
-		router.push("/home/with-ball/StartWarmUps");
+		router.push("/home/WholeBody/StartWarmUps");
 		setTimeout(() => setIsClickable(true), 1300);
 	};
 

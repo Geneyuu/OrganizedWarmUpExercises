@@ -2,13 +2,13 @@ export const exercises = [
 	{
 		id: "head-turns",
 		name: "Head Turns",
-		video: require("../../assets/videos/video.mp4"),
+		video: require("../../assets/videos/head-turns-landscape.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
 		description:
 			"Stand tall, feet shoulder-width apart. Slightly bend your knees, then reach toward your toes. Hold for 20 counts and return to start.",
 		intensity: {
 			beginner: {
-				recommendedRepetition: "10 reps",
+				recommendedRepetition: "10-15 reps",
 				recommendedDuration: "15 seconds",
 				duration: { min: 15, max: 20 },
 				repetitions: { min: 10, max: 15 },
@@ -33,7 +33,7 @@ export const exercises = [
 	{
 		id: "shoulder-rolls",
 		name: "Shoulder Rolls",
-		video: require("../../assets/videos/pushup.mp4"),
+		video: require("../../assets/videos/head-turns-landscape.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
 		description: "Relieves tension and improves shoulder flexibility.",
 		intensity: {
@@ -63,7 +63,7 @@ export const exercises = [
 	{
 		id: "arm-circles",
 		name: "Arm Circles",
-		video: require("../../assets/videos/pushup.mp4"),
+		video: require("../../assets/videos/head-turns-landscape.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
 		description: "Prepares shoulder joints for dynamic movement.",
 		intensity: {
@@ -93,7 +93,7 @@ export const exercises = [
 	{
 		id: "overhead-stretch",
 		name: "Overhead Stretch",
-		video: require("../../assets/videos/pushup.mp4"),
+		video: require("../../assets/videos/head-turns-landscape.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
 		description: "Improves upper body flexibility and posture.",
 		intensity: {
@@ -123,7 +123,7 @@ export const exercises = [
 	{
 		id: "side-stretches",
 		name: "Side Stretches",
-		video: require("../../assets/videos/pushup.mp4"),
+		video: require("../../assets/videos/head-turns-landscape.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
 		description: "Stretches the obliques and improves core flexibility.",
 		intensity: {
@@ -183,7 +183,7 @@ export const exercises = [
 	{
 		id: "knee-hugs",
 		name: "Knee Hugs",
-		video: require("../../assets/videos/pushup.mp4"),
+		video: require("../../assets/videos/head-turns-landscape.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
 		description: "Improves hip mobility and balance.",
 		intensity: {
@@ -213,7 +213,7 @@ export const exercises = [
 	{
 		id: "butt-kicks",
 		name: "Butt Kicks",
-		video: require("../../assets/videos/pushup.mp4"),
+		video: require("../../assets/videos/head-turns-landscape.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
 		description: "Loosens hamstrings and activates glutes.",
 		intensity: {
@@ -243,7 +243,7 @@ export const exercises = [
 	{
 		id: "walking-high-knees",
 		name: "Walking High Knees",
-		video: require("../../assets/videos/pushup.mp4"),
+		video: require("../../assets/videos/head-turns-landscape.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
 		description: "Warms up the hip flexors and quads.",
 		intensity: {
@@ -273,7 +273,7 @@ export const exercises = [
 	{
 		id: "jogging",
 		name: "Jogging",
-		video: require("../../assets/videos/pushup.mp4"),
+		video: require("../../assets/videos/head-turns-landscape.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
 		description: "Increases heart rate and warms up muscles.",
 		intensity: {
@@ -303,7 +303,7 @@ export const exercises = [
 	{
 		id: "lunges",
 		name: "Lunges",
-		video: require("../../assets/videos/pushup.mp4"),
+		video: require("../../assets/videos/head-turns-landscape.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
 		description: "Strengthens legs and glutes.",
 		intensity: {
@@ -333,7 +333,7 @@ export const exercises = [
 	{
 		id: "squats",
 		name: "Squats",
-		video: require("../../assets/videos/pushup.mp4"),
+		video: require("../../assets/videos/head-turns-landscape.mp4"),
 		image: require("../../assets/images/withballpreview.png"),
 		description: "Improves leg strength and mobility.",
 		intensity: {

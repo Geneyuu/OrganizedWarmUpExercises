@@ -109,17 +109,18 @@ export const ExerciseProvider = ({ children }) => {
 		initializeData();
 	}, []);
 
-	const loadSavedData = async (exerciseId, intensity) => {
+	const loadSavedData = async (exerciseValue, intensityValue) => {
 		try {
 			const savedData = await AsyncStorage.getItem("exerciseData");
 			if (savedData) {
 				const exercisesData = JSON.parse(savedData);
 				const exerciseData = exercisesData.find(
-					(ex) => ex.id === exerciseId
+					(ex) => ex.id === exerciseValue
 				);
 
-				if (exerciseData && exerciseData.intensity[intensity]) {
-					const intensityData = exerciseData.intensity[intensity];
+				if (exerciseData && exerciseData.intensity[intensityValue]) {
+					const intensityData =
+						exerciseData.intensity[intensityValue];
 					dispatch({
 						type: "SET_ALL_VALUES",
 						payload: {
@@ -152,26 +153,32 @@ export const ExerciseProvider = ({ children }) => {
 				return false;
 			}
 
+			// Check if the input contains any non-digit characters
+			// if (!/^\d+$/.test(value)) {
+			// 	Alert.alert(
+			// 		"Error",
+			// 		`${type} must be a valid number (digits only)!`
+			// 	);
+			// 	return false;
+			// }
+
 			const numericValue = parseInt(value);
 			if (isNaN(numericValue)) {
 				Alert.alert("Error", `${type} must be a valid number!`);
 				return false;
 			}
 
-			// Get current exercise data for range validation
-			const savedData = await AsyncStorage.getItem("exerciseData");
-			if (!savedData) return false;
-
-			const exercisesData = JSON.parse(savedData);
-			const exerciseData = exercisesData.find(
+			// Get ORIGINAL exercise data for range validation
+			const originalExercise = exercises.find(
 				(ex) => ex.id === exerciseValue
 			);
-			if (!exerciseData) return false;
+			if (!originalExercise) return false;
 
-			const intensitySettings = exerciseData.intensity[intensityValue];
-			const { min, max } = intensitySettings[type];
+			const originalIntensityData =
+				originalExercise.intensity[intensityValue];
+			const { min, max } = originalIntensityData[type];
 
-			// Range validation
+			// Range validation against original data
 			if (numericValue < min || numericValue > max) {
 				Alert.alert(
 					"Invalid Value",
@@ -181,6 +188,15 @@ export const ExerciseProvider = ({ children }) => {
 			}
 
 			// Proceed with saving if validation passes
+			const savedData = await AsyncStorage.getItem("exerciseData");
+			if (!savedData) return false;
+
+			const exercisesData = JSON.parse(savedData);
+			const exerciseData = exercisesData.find(
+				(ex) => ex.id === exerciseValue
+			);
+			if (!exerciseData) return false;
+
 			const updatedIntensity = {
 				...exerciseData.intensity[intensityValue],
 				[type]: {
